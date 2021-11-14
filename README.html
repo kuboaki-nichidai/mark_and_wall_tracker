@@ -5,42 +5,78 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.12">
-<title>ロードクリーナー（異物除去ロボット）</title>
+<title>巡回支援ロボット（トラッカー）</title>
 <link rel="stylesheet" href="css/mystyle.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="article">
 <div id="header">
-<h1>ロードクリーナー（異物除去ロボット）</h1>
+<h1>巡回支援ロボット（トラッカー）</h1>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>異物を探索しながらコースに沿って走行し、異物を発見したらコース外へ除去する作業をくり返す異物除去ロボット（以下、ロードクリーナー）があります。
-このロードクリーナーを題材に、以下の演習を実施しなさい。</p>
+<p>係員が広い敷地内の施設を巡回するのを支援する巡回支援ロボット（トラッカー）を開発します。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_演習の準備">1. 演習の準備</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>この演習では、分析・設計にUMLを使います。
-モデル図は、astah* Professional を使って作成します。</p>
-</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>モデリングツール</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>models</code> ディレクトリに <code>load_cleaner.asta</code> と <code>ev3rt.asta</code> があることを確認します。</p>
+<p>モデル図の参照や作成には、astah* Professional を使います。</p>
 </li>
+<li>
+<p><code>models</code> ディレクトリに <code>mark_and_wall_tracker.asta</code> と <code>ev3rt.asta</code> があることを確認します。</p>
+<div class="ulist">
+<ul>
 <li>
 <p>作成した図をファイルに書き出すときは、 <code>images</code> ディレクトリに保存します。</p>
 </li>
-<li>
-<p>プログラムは、<code>codes</code> ディレクトリに保存します。</p>
+</ul>
+</div>
 </li>
 </ul>
+</div>
+</li>
+<li>
+<p>開発環境</p>
+<div class="ulist">
+<ul>
+<li>
+<p>プログラムの開発やシミュレーションには Hakoniwa を使います。</p>
+</li>
+<li>
+<p>Hakoniwa には、EV3RT, クロスコンパイラなどが含まれます。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>作成したプログラムは、 Hakoniwaの環境から <code>codes</code> ディレクトリにコピーして提出します。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>アセット</p>
+<div class="ulist">
+<ul>
+<li>
+<p>シミュレーション用のUnitアセットには、 auto-ride2 を使います。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -48,63 +84,94 @@
 <h2 id="_要求分析">2. 要求分析</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ロードクリーナーについて、依頼元にヒアリングした結果を、「 <a href="#hearing_desc01">ロードクリーナーについてのヒアリング結果</a> 」に示します。</p>
+<p>巡回業務やトラッカーについて依頼元にヒアリングした結果を、「 <a href="#hearing_desc01">巡回業務についてのヒアリング結果</a> 」「 <a href="#hearing_desc02">トラッカーを使った巡回業務についてのヒアリング結果</a> 」に示します。</p>
 </div>
 <div id="hearing_desc01" class="olist arabic">
-<div class="title">ロードクリーナーについてのヒアリング結果</div>
+<div class="title">巡回業務についてのヒアリング結果</div>
 <ol class="arabic">
 <li>
-<p>清掃担当者（チーフ）は、自立走行するロボット「ロードクリーナー」を使って、事業所構内の運搬経路にある異物を除去している。</p>
+<p>巡回担当者（パトロール）は、事業所の敷地内の建物を巡回している。</p>
 </li>
 <li>
-<p>ロードクリーナーは、清掃センターに待機して、チーフの指示を待っている。</p>
+<p>これまでパトロールは自転車や徒歩で移動していたが、時間がかかっていた。</p>
 </li>
 <li>
-<p>チーフが開始指示を出すと、ロードクリーナーは、経路に沿って走行する。</p>
+<p>そこで、自律走行するロボット「トラッカー」を導入して、パトロールの巡回業務を支援することになった。</p>
+</li>
+</ol>
+</div>
+<div id="hearing_desc02" class="olist arabic">
+<div class="title">トラッカーを使った巡回業務についてのヒアリング結果</div>
+<ol class="arabic">
+<li>
+<p>トラッカーは、巡回センターに待機して、パトロールの指示を待っている。</p>
 </li>
 <li>
-<p>ロードクリーナーは、経路上に異物を見つけると、停止する。</p>
+<p>パトロールは、あらかじめ巡回業務の情報をトラッカーの巡回業務ファイルに登録しておく。</p>
 </li>
 <li>
-<p>ロードクリーナーは、ホルダーアームを使って異物をつかみ、旋回して経路外へ異物を移動する。</p>
+<p>トラッカーは、始動時に巡回用務ファイルからすべての巡回箇所（スポット）の巡回業務の情報を読み込んでおく。</p>
 </li>
 <li>
-<p>ロードクリーナーは、異物を経路外へ移動したら、再び経路に沿って異物を除去しながら走行する。</p>
+<p>巡回業務ファイルには、スポットごとに次の情報を登録しておく。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>スポットの識別方法（壁を使うかマーカーを使うか）。</p>
 </li>
 <li>
-<p>チーフが停止指示を出すと、ロードクリーナーは、走行を停止する。</p>
+<p>巡回対象のスポット（停止するスポット）の指定。</p>
 </li>
 <li>
-<p>上記3から7をくり返す。</p>
+<p>パトロールが降車して作業する、または乗車したまま作業する。</p>
+</li>
+<li>
+<p>乗車したまま作業する場合には、トラッカーのパネルを操作すればスポットの状況を調査できる（実際はできないが、そうできるものとみなす）。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>巡回して巡回センターに帰還したら業務を終了する</p>
+</li>
+<li>
+<p>巡回センターは、新たな巡回業務ファイルを用意しておく。</p>
+</li>
+<li>
+<p>帰還して業務を終了したトラッカーは、新たな巡回業務ファイルを受け取るために再始動する。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>起動後は、巡回センターで待機し、パトロール指示を待つ。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>以降、巡回業務をくり返す。</p>
 </li>
 </ol>
 </div>
 <div class="sect2">
 <h3 id="_演習要求分析のユースケース図を作成する">2.1. 【演習】要求分析のユースケース図を作成する</h3>
 <div class="paragraph">
-<p>「 <a href="#hearing_desc01">ロードクリーナーについてのヒアリング結果</a> 」を参照して、ロードクリーナーのユースケース図、ユースケース記述を作成しなさい。</p>
+<p>「 <a href="#hearing_desc01">巡回業務についてのヒアリング結果</a> 」「 <a href="#hearing_des02">[hearing_des02]</a> 」を参照して、トラッカーのユースケース図、ユースケース記述を作成しなさい。</p>
 </div>
 <div class="olist arabic">
 <div class="title">要求分析のユースケース図の作成</div>
 <ol class="arabic">
 <li>
-<p><code>models</code> ディレクトリの <code>load_cleaner.asta</code> を開く。</p>
+<p><code>models</code> ディレクトリの <code>mark_and_wall_tracker.asta</code> を開く。</p>
 </li>
 <li>
-<p>「01_要求分析」モデルの中に仮で作成された「要求分析のユースケース図」を編集しなさい。</p>
+<p>「01_要求分析」モデルの中に「要求分析のユースケース図」を作成しなさい。</p>
 <div class="ulist">
 <ul>
-<li>
-<p>アクターやユースケースのサンプルが書いてあるので、それを修正して使うか、削除して新しいものを追加しなさい。</p>
-</li>
 <li>
 <p>ユースケース記述は、ユースケースに紐付けたノートを使って作成しなさい。</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>ユースケース図（ノートに書くユースケース記述も）作成できたら、<code>load_cleaner.asta</code> を保存しなさい。</p>
 </li>
 </ol>
 </div>
@@ -146,9 +213,9 @@
 </div>
 <div id="use_case_svg" class="imageblock">
 <div class="content">
-<img src="images/use_case.svg" alt="ロードクリーナーのユースケース図" width="{tree-quarters-width}">
+<img src="images/use_case.svg" alt="トラッカーのユースケース図" width="{tree-quarters-width}">
 </div>
-<div class="title">図 1. 【ユースケース図】ロードクリーナーのユースケース図</div>
+<div class="title">図 1. 【ユースケース図】トラッカーのユースケース図</div>
 </div>
 </div>
 </div>
@@ -157,116 +224,133 @@
 <h2 id="_システム分析">3. システム分析</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ロードクリーナーに採用する機器や環境については別途検討が進められ、「 <a href="#hearing_desc02">ロードクリーナーに関する機器や環境等の検討結果</a> 」のように決まりました。</p>
+<p>トラッカーに採用する機器や環境については別途検討が進められ、「 <a href="#hearing_desc03">トラッカーに関する機器や環境等の検討結果</a> 」「 <a href="#hearing_desc04">トラッカーを使う巡回業務について追加された決定事項</a> 」のように決まりました。</p>
 </div>
-<div id="hearing_desc02" class="olist arabic">
-<div class="title">ロードクリーナーに関する機器や環境等の検討結果</div>
+<div id="hearing_desc03" class="olist arabic">
+<div class="title">トラッカーに関する機器や環境等の検討結果</div>
 <ol class="arabic">
 <li>
-<p>ロードクリーナーには、Mindstorms EV3のキットで製作した <a href="#load_cleaner">図 2</a> のような自律走行ロボットを採用する。</p>
+<p>トラッカーには、Mindstorms EV3のキットで製作した <a href="#tracker_detail">図 2</a> のような自律走行ロボットを採用する。</p>
 </li>
 <li>
-<p>ロードクリーナーの開発には「EV3RT」を採用する。</p>
+<p>トラッカーの開発には「Hakoniwa」を採用する。</p>
 <div class="ulist">
 <ul>
 <li>
-<p>EV3RTは、Mindstorms EV3用のRTOSを使った開発環境。RTOSカーネルにTOPPERS/HRP3を採用し、これにMindstorms EV3用のセンサーやモーター等のライブラリが追加されている。</p>
+<p>Hakoniwaは、Mindstorms EV3用のRTOSを使ったシミュレーション用の開発環境。RTOSカーネルにTOPPERS/HRP3を採用し、これにMindstorms EV3用のセンサーやモーター等のライブラリが追加されている。</p>
+</li>
+<li>
+<p>UnityによるGUIのアセットを用意することによって、3Dによるシミュレーションが実行できる。</p>
+</li>
+<li>
+<p>このシステムでは、 <code>auto-ride02</code> というアセット（ <a href="#asset_auto-ride02">図 3</a> ）が提供する巡回コースを使用する。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div id="tracker_detail" class="imageblock">
+<div class="content">
+<img src="images/tracker_detail.png" alt="自律走行ロボット" width="100%">
+</div>
+<div class="title">図 2. 巡回業務を支援するトラッカーに採用が決まった自律走行ロボット</div>
+</div>
+<div id="asset_auto-ride02" class="imageblock">
+<div class="content">
+<img src="images/asset_auto-ride02.png" alt="巡回コースのアセット" width="100%">
+</div>
+<div class="title">図 3. トラッカーが使用する巡回コースのアセット</div>
+</div>
+<div id="hearing_desc04" class="olist arabic">
+<div class="title">トラッカーを使う巡回業務について追加された決定事項</div>
+<ol class="arabic">
+<li>
+<p>巡回業務の開始指示は、パトロールがトラッカーのEV3本体の「右ボタン」を押すこととする。</p>
+</li>
+<li>
+<p>巡回業務の終了指示は、パトロールがトラッカーのEV3本体の「左ボタン」を押すこととする。</p>
+</li>
+<li>
+<p>巡回の際、トラッカーから降車しないで検査する場合、パトロールがトラッカーのEV3本体の「上ボタン」を押すこと検査開始、「下ボタン」を押すと検査終了とする。</p>
+</li>
+<li>
+<p>検査終了時には、乗車後（あるいは乗車したままの検査を終了後）に「右ボタン」を押すことで、走行を再開する。</p>
+</li>
+</ol>
+</div>
+<div id="buttons" class="imageblock">
+<div class="content">
+<img src="images/buttons.png" alt="ボタンの役割" width="50%">
+</div>
+<div class="title">図 4. トラッカーのEV3本体のボタンの役割</div>
+</div>
+<div id="hearing_desc05" class="olist arabic">
+<div class="title">巡回業務ファイルの様式</div>
+<ol class="arabic">
+<li>
+<p>巡回業務ファイルは、 <code>sdk/workspace/mark_and_wall_tracker/_ev3rtfs/patrol_data.txt</code> とする。</p>
+</li>
+<li>
+<p>巡回するスポット1箇所ごとに1レコード（1行）の巡回業務の情報を持つ。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>1レコードには、3つの情報（スポットの識別方法、巡回対象の指定、業務種別の指定）を持つ。</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>このシステムによって除去するのは、 <a href="#corn_object">図 3</a> のような大きさ・形状の障害物。</p>
+<p>1レコードは、3ビットで構成する。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>最上位ビットはスポットの識別。 <code>0</code> は壁で認識し、 <code>1</code> はマーカーで認識する。</p>
 </li>
 <li>
-<p>このシステムでは、 <a href="#load_map">図 4</a> のようなコースを巡回する。</p>
+<p>2ビット目は巡回対象の指定。 <code>0</code> は巡回対象としない（スキップする）。 <code>1</code> は巡回する（停止する）。</p>
 </li>
 <li>
-<p>チーフの開始指示は、ロードクリーナーのEV3本体の「右ボタン」を押すことする。</p>
+<p>最下位ビットは業務種別の指定。 <code>0</code> は少なくとも1度降車して業務し、再び乗車すると業務を実施したとみなす。 <code>1</code> は、トラッカーのパネルを操作してスポットを調査する方法で業務を実施する。</p>
 </li>
-<li>
-<p>チーフの停止指示は、ロードクリーナーのEV3本体の「左ボタン」を押すことする。</p>
+</ul>
+</div>
 </li>
 </ol>
 </div>
-<div id="load_cleaner" class="imageblock">
+<div id="patrol_data_example" class="exampleblock">
+<div class="title">リスト 1. <code>patrol_data.txt</code> の例</div>
 <div class="content">
-<img src="images/load_cleaner.jpg" alt="自律走行ロボット" width="75%">
-</div>
-<div class="title">図 2. ロードクリーナーに採用が決まった自律走行ロボット</div>
-</div>
-<div id="corn_object" class="imageblock">
+<div class="listingblock">
 <div class="content">
-<img src="images/corn_object.jpg" alt="障害物" width="25%">
+<pre class="highlight"><code class="language-text" data-lang="text">7 <i class="conum" data-value="1"></i><b>(1)</b>
+2 <i class="conum" data-value="2"></i><b>(2)</b>
+4 <i class="conum" data-value="3"></i><b>(3)</b>
+6 <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
 </div>
-<div class="title">図 3. ロードクリーナーが除去する障害物</div>
 </div>
-<div id="load_map" class="imageblock">
-<div class="content">
-<img src="images/load_map.png" alt="障害物" width="100%">
-</div>
-<div class="title">図 4. ロードクリーナーが巡回するコース</div>
-</div>
-<div class="sect2">
-<h3 id="_演習システム分析の方式設計書を作成する">3.1. 【演習】システム分析の方式設計書を作成する</h3>
-<div class="paragraph">
-<p>「 <a href="#hearing_desc02">ロードクリーナーに関する機器や環境等の検討結果</a> 」を参照して、方式設計書を作成しなさい。</p>
-</div>
-<div class="admonitionblock note">
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>方式設計としては他にも検討し、記載すべきことがありますが、ここでは「 <a href="#hearing_desc02">ロードクリーナーに関する機器や環境等の検討結果</a> 」で検討した範囲を記載するだけにとどめます。</p>
-</div>
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>111</code>: マーカーで認識、停止する、パネル操作で検査</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>010</code>: 壁で認識、停止する、降車して検査</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>100</code>: マーカーで認識、スキップ、（スキップなので無視する）</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><code>110</code>: マーカーで認識、停止する、降車して検査</td>
 </tr>
 </table>
 </div>
-<div class="olist arabic">
-<div class="title">システム分析の方式設計書の作成</div>
-<ol class="arabic">
-<li>
-<p><code>models</code> ディレクトリの <code>load_cleaner.asta</code> を開く。</p>
-</li>
-<li>
-<p>「02_システム分析」モデルの中に仮で作成された「方式設計書」を編集しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>使用する機器や環境等についてノートに記載しなさい。</p>
-</li>
-<li>
-<p>他に記載することがあれば、追記します。</p>
-</li>
-</ul>
 </div>
-</li>
-<li>
-<p>方式設計書が作成できたら、<code>load_cleaner.asta</code> を保存しなさい。</p>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">方式設計書の保存と作業のコミット</div>
-<ol class="arabic">
-<li>
-<p>作成した方式設計書をSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>images</code> ディレクトリに <code>system_design.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>ここまでの作業をコミットします。</p>
-</li>
-</ol>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -276,27 +360,23 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>この演習では、この段階でコミットできているかどうかも評価します。
-コミットを省かないよう、注意してください。</p>
+<p>ファイルを配置するディレクトリが <code>_ev3rtfs</code> ディレクトリなのは、EV3RTの制約です。
+この場所は変更できないので注意しましょう。</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_方式設計書">3.1. 方式設計書</h3>
 <div class="paragraph">
-<p>画像が保存できていれば、下記のユースケース図が更新されます。</p>
-</div>
-<div id="system_design_svg" class="imageblock">
-<div class="content">
-<img src="images/system_design.svg" alt="ロードクリーナーの方式設計書" width="{tree-quarters-width}">
-</div>
-<div class="title">図 5. 【方式設計書】ロードクリーナーの方式設計書</div>
+<p>方式設計書の作成は省略します。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_ドメイン分割図">3.2. ドメイン分割図</h3>
 <div class="paragraph">
-<p>「 <a href="#hearing_desc02">ロードクリーナーに関する機器や環境等の検討結果</a> 」を参照して作成したドメイン分割図を <a href="#domain_chart_svg">図 6</a> に示します。</p>
+<p>「 <a href="#hearing_desc02">トラッカーを使った巡回業務についてのヒアリング結果</a> 」を参照して作成したドメイン分割図を <a href="#domain_chart_svg">図 5</a> に示します。</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -314,9 +394,9 @@
 </div>
 <div id="domain_chart_svg" class="imageblock">
 <div class="content">
-<img src="images/domain_chart.svg" alt="ロードクリーナーのドメイン分割図" width="{tree-quarters-width}">
+<img src="images/domain_chart.svg" alt="トラッカーのドメイン分割図" width="{tree-quarters-width}">
 </div>
-<div class="title">図 6. 【ドメイン分割図】ロードクリーナーのドメイン分割図</div>
+<div class="title">図 5. 【ドメイン分割図】トラッカーのドメイン分割図</div>
 </div>
 </div>
 </div>
@@ -325,248 +405,18 @@
 <h2 id="_外部設計">4. 外部設計</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ロードクリーナーについて、システムの外部（アクター）とのやりとりを整理します。</p>
+<p>トラッカーについて、システムの外部（アクター）とのやりとりを整理します。</p>
 </div>
 <div class="sect2">
-<h3 id="_演習外部設計のクラス図を作成する１">4.1. 【演習】外部設計のクラス図を作成する（１）</h3>
+<h3 id="_外部設計のクラス図">4.1. 外部設計のクラス図</h3>
 <div class="paragraph">
-<p>手順に従って、外部設計の初期のクラス図を作成しなさい。
-初期のクラス図では、サブシステムがないか検討し、システム、アクター、サブシステムの候補を示す。</p>
-</div>
-<div class="olist arabic">
-<div class="title">外部設計の初期のクラス図の作成</div>
-<ol class="arabic">
-<li>
-<p>構造ツリーの「03_外部設計」に仮に作成してある外部設計用のクラス図を編集しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>クラス図に「01_要求分析」からアクターを追加しなさい。</p>
-</li>
-<li>
-<p>追加したアクターのアイコン表記を「標準」に変える（ <a href="#change_icon_face_png">図 7</a> ）。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>サブシステムを検討しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>開発単位（チーム、モジュール）が複数に分かれるところは、そこで分割する。</p>
-</li>
-<li>
-<p>通信がある（送る側、受ける側がある）ところがあれば、そこで分割する。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>サブシステム候補が見つかった場合</p>
-<div class="ulist">
-<ul>
-<li>
-<p>クラスを使ってサブシステムを追加する（サブシステムのシンボルもあるが、この演習ではクラスを使う）。</p>
-</li>
-<li>
-<p>追加したクラスのステレオタイプに <code>subsystem</code> を追加する。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>サブシステムが見つからなかった場合</p>
-<div class="ulist">
-<ul>
-<li>
-<p>システムをクラスとして追加する。</p>
-</li>
-<li>
-<p>追加したクラスのステレオタイプに <code>system</code> を追加する。</p>
-</li>
-</ul>
-</div>
-</li>
-</ol>
-</div>
-<div id="change_icon_face_png" class="imageblock">
-<div class="content">
-<img src="images/change_icon_face.png" alt="クラスのアイコンを標準アイコンに変更する" width="50%">
-</div>
-<div class="title">図 7. クラスのアイコンを標準アイコンに変更する</div>
-</div>
-<div class="olist arabic">
-<div class="title">初期のクラス図の保存と作業のコミット</div>
-<ol class="arabic">
-<li>
-<p>作成した外部設計のクラス図をSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>images</code> ディレクトリに <code>system_design_class_01.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>ここまでの作業をコミットします。</p>
-</li>
-</ol>
-</div>
-<div class="openblock Important">
-<div class="content">
-<div class="paragraph">
-<p>この演習では、この段階でコミットできているかどうかも評価します。
-コミットを省かないよう、注意してください。</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>画像が保存できていれば、下記のクラス図が更新されます。</p>
-</div>
-<div id="system_design_class_01_svg" class="imageblock">
-<div class="content">
-<img src="images/system_design_class_01.svg" alt="ロードクリーナーの外部設計の初期のクラス図" width="{tree-quarters-width}">
-</div>
-<div class="title">図 8. 【外部設計書】ロードクリーナーの外部設計の初期のクラス図</div>
+<p>外部設計のクラス図の作成は省略します。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_演習外部設計のシーケンス図を作成する">4.2. 【演習】外部設計のシーケンス図を作成する</h3>
+<h3 id="_外部設計のシーケンス図">4.2. 外部設計のシーケンス図</h3>
 <div class="paragraph">
-<p>手順に従って、外部設計のシーケンス図を作成しなさい。</p>
-</div>
-<div class="olist arabic">
-<div class="title">外部設計のシーケンス図の作成</div>
-<ol class="arabic">
-<li>
-<p>構造ツリーの「03_外部設計」に仮に作成した外部設計用のシーケンス図を編集しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>ユースケースが複数ある場合は、ユースケースごとにシーケンス図を作成しなさい。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>構造ツリーの「01_要求分析」に登録したアクターをシーケンス図にドラッグして追加しなさい。</p>
-</li>
-<li>
-<p>構造ツリーの「03_外部設計」に登録したクラスの候補をシーケンス図にドラッグして追加しなさい。</p>
-</li>
-<li>
-<p>ユースケース記述をもとに、クラス候補の間にメッセージを追加しなさい。</p>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">シーケンス図の保存と作業のコミット</div>
-<ol class="arabic">
-<li>
-<p>作成した外部設計のシーケンス図をSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>images</code> ディレクトリに <code>system_design_seq.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>ここまでの作業をコミットします。</p>
-</li>
-</ol>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>この演習では、この段階でコミットできているかどうかも評価します。
-コミットを省かないよう、注意してください。</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>画像が保存できていれば、下記のシーケンス図が更新されます。</p>
-</div>
-<div id="system_design_seq_svg" class="imageblock">
-<div class="content">
-<img src="images/system_design_seq.svg" alt="ロードクリーナーの外部設計のシーケンス図" width="{tree-quarters-width}">
-</div>
-<div class="title">図 9. 【外部設計書】ロードクリーナーの外部設計のシーケンス図</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_演習外部設計のクラス図を作成する２">4.3. 【演習】外部設計のクラス図を作成する（２）</h3>
-<div class="paragraph">
-<p>手順に従って、外部設計のクラス図を更新しなさい。</p>
-</div>
-<div class="olist arabic">
-<div class="title">外部設計のクラス図の更新</div>
-<ol class="arabic">
-<li>
-<p>構造ツリーの「03_外部設計」に仮に作成してある外部設計用のクラス図を編集しなさい。</p>
-</li>
-<li>
-<p>シーケンス図でそれぞれのクラス（やアクター）が受け取っているメッセージを、そのクラスの操作に追加しなさい。</p>
-</li>
-<li>
-<p>やり取りが見つかったクラス（やアクター）の間に、関連の線を引きなさい。</p>
-</li>
-<li>
-<p>やりとりに参加していないことがわかったクラス候補は、図の端の方へよけて枠で囲み「除外されたクラス」というテキストをつけておきなさい（削除しないでとっておく）。</p>
-</li>
-</ol>
-</div>
-<div class="olist arabic">
-<div class="title">クラス図の保存と作業のコミット</div>
-<ol class="arabic">
-<li>
-<p>作成した外部設計のシーケンス図をSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>images</code> ディレクトリに <code>system_design_class_02.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>ここまでの作業をコミットします。</p>
-</li>
-</ol>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>この演習では、この段階でコミットできているかどうかも評価します。
-コミットを省かないよう、注意してください。</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>画像が保存できていれば、下記のクラス図が更新されます。</p>
-</div>
-<div id="system_design_class_02_svg" class="imageblock">
-<div class="content">
-<img src="images/system_design_class_02.svg" alt="ロードクリーナーの外部設計の検討後のクラス図" width="{tree-quarters-width}">
-</div>
-<div class="title">図 10. 【外部設計書】ロードクリーナーの外部設計の検討後のクラス図</div>
+<p>外部設計のシーケンス図の作成は省略します。</p>
 </div>
 </div>
 </div>
@@ -575,96 +425,79 @@
 <h2 id="_内部設計">5. 内部設計</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ロードクリーナーについて、システム（またはサブシステム）の内部の構造と振舞いを作成します。</p>
-</div>
-<div class="paragraph">
-<p>ところが、このシステムは、内部設計の設計書が作成されないまま、実装されてしまいました。
-現状は <a href="#cleaner_demo_video">作成されたロードクリーナーのデモ動画</a> のような動作をするシステムとして実装されています。</p>
-</div>
-<div id="cleaner_demo_video" class="videoblock">
-<div class="title">作成されたロードクリーナーのデモ動画</div>
-<div class="content">
-<iframe width="640" height="360" src="https://www.youtube.com/embed/A24WsSucrKw?rel=0" frameborder="0" allowfullscreen></iframe>
-</div>
-</div>
-<div class="paragraph">
-<p>この実装は、概ね依頼者の要件を満たしているので、動作には問題がないという判断がなされています。
-しかし、内部設計書が作成されていないため、このままではシステムの維持や保守が困難になります。</p>
-</div>
-<div class="paragraph">
-<p>そこで、要求分析、システム分析、外部設計の情報とこの動作から観測できる情報を元に、内部設計書を作成してください。</p>
+<p>トラーッカーについて、システム（またはサブシステム）の内部の構造と振舞いを作成します。</p>
 </div>
 <div class="sect2">
-<h3 id="_演習内部設計のクラス図とステートマシン図を作成する">5.1. 【演習】内部設計のクラス図とステートマシン図を作成する</h3>
+<h3 id="_内部設計のクラス図">5.1. 内部設計のクラス図</h3>
 <div class="paragraph">
-<p>手順に従って、内部設計のクラス図とステートマシン図を作成しなさい。</p>
+<p>トラッカーの内部設計のクラス図は、ほぼ作成済みのものを使います（ <a href="#detail_design_clas_svg">図 6</a> ）。</p>
 </div>
-<div class="olist arabic">
-<div class="title">内部設計のクラス図とステートマシン図の作成</div>
-<ol class="arabic">
-<li>
-<p>構造ツリーの「04_内部設計」に仮に作成してある内部設計用のクラス図を編集しなさい。</p>
-</li>
-<li>
-<p>システム分析の記述「 <a href="#hearing_desc02">ロードクリーナーに関する機器や環境等の検討結果</a> 」や「方式設計書」などを参考に、クラス図にクラスを追加しなさい。</p>
-</li>
-<li>
-<p>必要な関連を追加しなさい。</p>
-</li>
-<li>
-<p>一旦作成したら、システムの振舞いを担うクラスの内部設計のステートマシン図を作成しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>仮の設定として <code>app</code> パッケージの <code>load_cleaner</code> クラスの <code>run</code> メソッドが担当する操作としてステートマシン図を追加してあります。</p>
-</li>
-<li>
-<p>他のクラスの振舞いにもステートマシン図が必要なら追加しなさい。</p>
-</li>
-</ul>
+<div id="detail_design_clas_svg" class="imageblock">
+<div class="content">
+<img src="images/detail_design_class.svg" alt="トラッカーの内部設計のクラス図" width="100%">
 </div>
-</li>
-<li>
-<p>ステートマシン図を作成する際に、必要となるモノや働きが不足するようなら、クラス図に戻って追加、修正しなさい。</p>
-</li>
-<li>
-<p>クラス図に追加、修正が済んだら、それを使ってステートマシン図を更新しなさい。</p>
-</li>
-<li>
-<p>外部設計のやりとり（または、ユースケースやユースケース記述）に見合う処置が表現できるまで、クラス図とステートマシン図の修正を繰り返しなさい。</p>
-</li>
-</ol>
+<div class="title">図 6. 【内部設計書】トラッカーの内部設計のクラス図</div>
 </div>
-<div class="olist arabic">
-<div class="title">クラス図とステートマシン図の保存と作業のコミット</div>
-<ol class="arabic">
-<li>
-<p>作成した内部設計のクラス図とステートマシン図をSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>クラス図は、 <code>images</code> ディレクトリに <code>detail_design_class.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-<li>
-<p>ステートマシン図は、 <code>images</code> ディレクトリに <code>detail_design_load_cleaner_run_stm.svg</code> という名前で保存します（すでに仮の画像がおいてあるので、置き換えます）。</p>
-</li>
-</ul>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>基本的に、このクラス図が、別チームが設計して指示として受理したものとなります。
+ただし、これは作成中のものを引き継いだので、追加や変更が必要ならばクラス図を編集します。
+演習としては、編集したことによってシステムやモデルの品質が下がるよう場合、この演習の評価も下がることに注意しておきましょう。</p>
 </div>
-</li>
-<li>
-<p>他のクラスにもステートマシン図を作成したなら、同様にSVG画像として保存しなさい。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>追加した図は、 <code>git add</code> コマンドを使ってリポジトリの追跡対象に追加しなさい。f</p>
-</li>
-</ul>
+</td>
+</tr>
+</table>
 </div>
-</li>
-<li>
-<p>ここまでの作業をコミットします。</p>
-</li>
-</ol>
+</div>
+<div class="sect2">
+<h3 id="_演習内部設計のステートマシン図を作成する">5.2. 【演習】内部設計のステートマシン図を作成する</h3>
+<div class="paragraph">
+<p>トラッカーの内部設計のステートマシン図は、作成中のものを使います（ <a href="#detail_design_tracker_tracking_stm_svg">図 7</a> ）。</p>
+</div>
+<div class="paragraph">
+<p>内部設計の振舞いを吟味して、必要な追加や修正を施しましょう。</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>基本的に、このステートマシン図が、別チームが設計していて、その後の設計業務を引き継いだものとなります。
+つまり、このステートマシン図は作成中のものなので、追加や変更が必要になります。
+演習としては、編集したことによってシステムやモデルの品質が下がるよう場合、この演習の評価も下がることに注意しておきましょう。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="detail_design_tracker_tracking_stm_svg" class="imageblock">
+<div class="content">
+<img src="images/detail_design_tracker_tracking_stm.svg" alt="trackerのtrackingのステートマシン図" width="100%">
+</div>
+<div class="title">図 7. 【内部設計書】trackerのtrackingのステートマシン図</div>
+</div>
+<div class="paragraph">
+<p>もし、他のクラスも振舞いのモデル図が必要なら、そのクラスにステートマシン図を追加します。
+そして上記の要領で、図をここに追加します。</p>
+</div>
+<div id="detail_design_xxxx_svg" class="imageblock">
+<div class="content">
+<img src="images/detail_design_xxxx.svg" alt="別のクラスのステートマシン図" width="100%">
+</div>
+<div class="title">図 8. 【内部設計書】別のクラスのステートマシン図（必要な場合はこれを修正して追加する）</div>
+</div>
+<div class="paragraph">
+<p>クラス図とステートマシン図を編集したら、まだ修正している段階でもよいので、まめにコミットしておきます。
+おそらく、何度かコミットすることになるでしょう。</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -681,33 +514,14 @@
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>画像が保存できていれば、下記のクラス図とステートマシン図が更新されます。</p>
-</div>
-<div id="detail_design_class_svg" class="imageblock">
-<div class="content">
-<img src="images/detail_design_class.svg" alt="ロードクリーナーの内部設計のクラス図" width="100%">
-</div>
-<div class="title">図 11. 【内部設計書】ロードクリーナーの内部設計のクラス図</div>
-</div>
-<div class="paragraph">
-<p>｀</p>
-</div>
-<div id="detail_design_load_cleaner_run_stm_svg" class="imageblock">
-<div class="content">
-<img src="images/detail_design_load_cleaner_run_stm.svg" alt="ロードクリーナーの内部設計のステートマシン図" width="100%">
-</div>
-<div class="title">図 12. 【内部設計書】ロードクリーナーの内部設計のステートマシン図</div>
-</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_設計書の文書化">6. 設計書の文書化</h2>
+<h2 id="_実装">6. 実装</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>作成した設計書を文書化しなさい。
-モデル図が作成できたら、 <code>asciidoctor</code> コマンドで HTMLファイルに変換します（ <a href="#asciidoctor_to_html">リスト 1</a> ）。</p>
+<p>講義で使用した変換ルールに従って、内部設計のクラス図とステートマシン図から、トラッカーのコードを実装します。</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -717,7 +531,159 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Asciidoctor のインストールと使い方については、アセット「 <code>install_asciidoctor</code> 」で実施してあります。
+<p>実装の例としては、 <code>timer01</code> や <code>sample04_bin_mkr</code> などが参考になるでしょう。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>この演習では、この段階でコミットできているかどうかも評価します。
+コミットを省かないよう、注意してください。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>コードを作成するのは、Hakoniwaをインストールした場所の <code>sdk/workspace</code> ディレクトリになります。
+提出するときは、 <code>sd/workspace</code> の中に作成したディレクトリを <code>codes</code> ディレクトリにコピーします。</p>
+</div>
+<div class="paragraph">
+<p>また、実行時に使用する巡回業務ファイルは、 <code>_ev3rtfs</code> ディレクトリごと <code>codes</code> ディレクトリにコピーします。
+複数ケースの実行結果を保存するには、 <code>patrol_data.txt</code> を名前を変えて <code>patrol_data_01.txt</code> などにコピーして保存します。</p>
+</div>
+<div class="paragraph">
+<p><code>codes</code> ディレクトリの <code>tracker</code> が保存先なら、ファイルを置き換えれば下記が更新されます。</p>
+</div>
+<div id="app_h" class="exampleblock">
+<div class="title">リスト 2. <code>app.h</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのapp.hで置き換えます。</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="app_c" class="exampleblock">
+<div class="title">リスト 3. <code>app.c</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのapp.cで置き換えます。</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_実行結果の作成">7. 実行結果の作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>動作結果の動画を収録して提出します。</p>
+</div>
+<div class="sect2">
+<h3 id="_テストケースの作成">7.1. テストケースの作成</h3>
+<div class="paragraph">
+<p>実行結果は、2通り作成してください（ <a href="#test_case">テストケース</a> ）。</p>
+</div>
+<div id="test_case" class="ulist">
+<div class="title">テストケース</div>
+<ul>
+<li>
+<p>ケース1： （壁,止,降）, （マ,止,乗）, （マ,通, <code>-</code>）, （壁,止,降）</p>
+</li>
+<li>
+<p>ケース2： （マ,止,乗）, （壁,通, <code>-</code>）, （壁,止,乗）, （マ,止,降）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>データを作成したら、保存します。
+提出用に <code>codes/_ev3rtfs</code> ディレクトリに保存すると、後述の「文書化」を実行すると生成されるHTMLでは、下記が更新されます。</p>
+</div>
+<div id="patrol_data_01" class="exampleblock">
+<div class="title">リスト 4. ケース1の巡回業務ファイル（ <code>patrol_data_01.txt</code> ）</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">このファイルの内容を作成したテストケースのデータで置き換えます。</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="patrol_data_02" class="exampleblock">
+<div class="title">リスト 5. ケース2の巡回業務ファイル（ <code>patrol_data_02.txt</code> ）</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">このファイルの内容を作成したテストケースのデータで置き換えます。</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_実行結果の保存方法">7.2. 実行結果の保存方法</h3>
+<div class="paragraph">
+<p>収録には、次のようなアプリケーショが使えます。</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">OBS（Open Broadcaster Software）</dt>
+<dd>
+<p><code><a href="https://obsproject.com/" class="bare">https://obsproject.com/</a></code></p>
+</dd>
+<dt class="hdlist1">ScreenToGif</dt>
+<dd>
+<p><code><a href="https://www.screentogif.com/" class="bare">https://www.screentogif.com/</a></code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>シミュレーションが動作しているとわかるよう、実行結果を動画に保存します。
+このとき、 <a href="#rec_sample">図 9</a> のように、ターミナル1（シミュレーションのログが表示されているターミナル）と、Unityの3Dシミュレーション画面の両方を収録します。</p>
+</div>
+<div id="rec_sample" class="imageblock">
+<div class="content">
+<img src="images/rec_sample.jpg" alt="rec sample" width="100%">
+</div>
+<div class="title">図 9. 実行時動画の収録例</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_実行結果の保存場所">7.3. 実行結果の保存場所</h3>
+<div class="paragraph">
+<p>作成した実行結果は、 <code>movies</code> ディレクトリに置いてください。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_設計書の文書化">8. 設計書の文書化</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>作成した設計書を文書化しなさい。
+モデル図が作成できたら、 <code>asciidoctor</code> コマンドで HTMLファイルに変換します（ <a href="#asciidoctor_to_html">リスト 6</a> ）。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Asciidoctor のインストールと使い方については、すでにアセット「 <code>install_asciidoctor</code> 」で実施してあります。
 わからないことがあれば、そちらを参照しましょう。</p>
 </div>
 </td>
@@ -725,7 +691,7 @@
 </table>
 </div>
 <div id="asciidoctor_to_html" class="exampleblock">
-<div class="title">リスト 1. 【端末】Asciidoc形式のファイルをHTMLに変換する</div>
+<div class="title">リスト 6. 【端末】Asciidoc形式のファイルをHTMLに変換する</div>
 <div class="content">
 <div class="ulist">
 <ul>
@@ -744,12 +710,27 @@
 <div class="paragraph">
 <p>生成されたHTMLファイル（ <code>README.html</code> ）をブラウザで表示して、作成した図を反映した文書が生成できていることを確認します。</p>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>この演習では、この段階でコミットできているかどうかも評価します。
+HTMLファイルを生成したときのコミットを省かないよう、注意してください。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-08 12:59:57 +0900
+Last updated 2021-11-15 03:07:35 +0900
 </div>
 </div>
 </body>
