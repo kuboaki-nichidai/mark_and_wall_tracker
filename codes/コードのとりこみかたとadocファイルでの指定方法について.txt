@@ -1,0 +1,74 @@
+たとえば、sdk/workspaceにtrackerが次のように作成されていたとします。
+（appパッケージ、unitパッケージも含まれている）
+
+workspace
+ └── traker
+      ├── app
+      │   ├── traker.c
+      │   ├── tracker.h
+      │   ├── line_tracer.c
+      │   └── line_tracer.h
+      ├── unit
+      │   ├── driver.c
+      │   ├── driver.h
+      │   ├── wall_detector.h
+      │   ├── wall_detector.c
+      │   ├── linemon.c
+      │   └── linemon.h
+      ├── app.c
+      ├── app.h
+      └── _ev3rtfs
+
+
+このときは、trackerから下をcodesディレクトリにコピーします。
+
+codes
+ └── traker
+      ├── app
+      │   ├── traker.c
+      │   ├── tracker.h
+      │   ├── line_tracer.c
+      │   └── line_tracer.h
+      ├── unit
+      │   ├── driver.c
+      │   ├── driver.h
+      │   ├── wall_detector.h
+      │   ├── wall_detector.c
+      │   ├── linemon.c
+      │   └── linemon.h
+      ├── app.c
+      ├── app.h
+      └── _ev3rtfs
+
+adocファイルにリストを指定するときは、codesディレクトリからのパスを指定するので、
+次のような指定になります。
+
+[[app_h]]
+.`app.h`
+[example]
+--
+[source,text]
+----
+include::{sourcesdir}/tracker/app.h[]
+----
+--
+
+[[tracker.h]]
+.`app/trakcer.h`
+[example]
+--
+[source,text]
+----
+include::{sourcesdir}/tracker/app/tracker.h[]
+----
+--
+
+[[linemon.c]]
+.`unit/linemon.c`
+[example]
+--
+[source,text]
+----
+include::{sourcesdir}/tracker/unit/tracker.h[]
+----
+--

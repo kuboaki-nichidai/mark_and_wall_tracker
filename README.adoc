@@ -278,27 +278,37 @@ image::detail_design_xxxx.svg[別のクラスのステートマシン図, {full-
 また、実行時に使用する巡回業務ファイルは、 `_ev3rtfs` ディレクトリごと `codes` ディレクトリにコピーします。
 複数ケースの実行結果を保存するには、 `patrol_data.txt` を名前を変えて `patrol_data_01.txt` などにコピーして保存します。
 
+`sdk/workspace/trakcer` がこの作成したディレクトリなら、 `codes` ディレクトリへコピーします。
+`codes` ディレクトリには `tracker` から下が保存されるでしょう。
 
-`codes` ディレクトリの `tracker` が保存先なら、ファイルを置き換えれば下記が更新されます。
-
-[[app_h]]
-.`app.h`
+[[tracker_h]]
+.`app/tracker.h`
 [example]
 --
 [source,text]
 ----
-include::{sourcesdir}/tracker/app.h[]
+include::{sourcesdir}/tracker/app/tracker.h[]
 ----
 --
 
-[[app_c]]
-.`app.c`
+[[linemon_c]]
+.`unit/linemon.c`
 [example]
 --
 [source,text]
 ----
-include::{sourcesdir}/tracker/app.c[]
+include::{sourcesdir}/tracker/unit/linemon.c[]
 ----
+--
+
+[WARNING]
+--
+全てではなくてよいので、作成したファイルのうち重要なファイルを示すようにするおこと。．
+
+* ステートマシン図を作成したなら、そのメソッドを実装しているコードを含むファイルを示す。
+* 装上工夫を要したクラスを含むファイルを示す。
+
+なお、もし実装上に工夫を要したのであれば、先の内部設計でもそのことがわかる図を追加しておくべきでしょう。
 --
 
 
