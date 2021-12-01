@@ -334,7 +334,7 @@ include::{sourcesdir}/tracker/unit/linemon.c[]
 --
 [source,text]
 ----
-include::{sourcesdir}/_ev3rtfs/patrol_data_01.txt[]
+include::{sourcesdir}/tracker/_ev3rtfs/patrol_data_01.txt[]
 ----
 --
 
@@ -344,7 +344,7 @@ include::{sourcesdir}/_ev3rtfs/patrol_data_01.txt[]
 --
 [source,text]
 ----
-include::{sourcesdir}/_ev3rtfs/patrol_data_02.txt[]
+include::{sourcesdir}/tracker/_ev3rtfs/patrol_data_02.txt[]
 ----
 --
 === 実行結果の保存方法

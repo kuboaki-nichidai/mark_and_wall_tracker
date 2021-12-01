@@ -561,27 +561,55 @@
 複数ケースの実行結果を保存するには、 <code>patrol_data.txt</code> を名前を変えて <code>patrol_data_01.txt</code> などにコピーして保存します。</p>
 </div>
 <div class="paragraph">
-<p><code>codes</code> ディレクトリの <code>tracker</code> が保存先なら、ファイルを置き換えれば下記が更新されます。</p>
+<p><code>sdk/workspace/trakcer</code> がこの作成したディレクトリなら、 <code>codes</code> ディレクトリへコピーします。
+<code>codes</code> ディレクトリには <code>tracker</code> から下が保存されるでしょう。</p>
 </div>
-<div id="app_h" class="exampleblock">
-<div class="title">リスト 2. <code>app.h</code></div>
+<div id="tracker_h" class="exampleblock">
+<div class="title">リスト 2. <code>app/tracker.h</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのapp.hで置き換えます。</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのtracker.hで置き換えます（他のファイル同様です）。</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="app_c" class="exampleblock">
-<div class="title">リスト 3. <code>app.c</code></div>
+<div id="linemon_c" class="exampleblock">
+<div class="title">リスト 3. <code>unit/linemon.c</code></div>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのapp.cで置き換えます。</code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">作成したプログラムのlinemon.cで置き換えます（他のファイル同様です）。</code></pre>
 </div>
 </div>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>全てではなくてよいので、作成したファイルのうち重要なファイルを示すようにするおこと。．</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ステートマシン図を作成したなら、そのメソッドを実装しているコードを含むファイルを示す。</p>
+</li>
+<li>
+<p>装上工夫を要したクラスを含むファイルを示す。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>なお、もし実装上に工夫を要したのであれば、先の内部設計でもそのことがわかる図を追加しておくべきでしょう。</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -730,7 +758,7 @@ HTMLファイルを生成したときのコミットを省かないよう、注�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-11-15 03:07:35 +0900
+Last updated 2021-12-01 11:50:14 +0900
 </div>
 </div>
 </body>
